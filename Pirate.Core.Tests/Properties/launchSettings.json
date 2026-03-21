@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Pirate.Core.Tests": {
+      "commandName": "Project"
+    }
+  }
+}

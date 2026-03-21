@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Pirate.Core.Tests/Pirate.Core.Tests.csproj" />
+  <Project Path="Pirate.Core/Pirate.Core.csproj" />
+</Solution>

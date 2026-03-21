@@ -1,4 +1,4 @@
-﻿namespace Calculator.Tests;
+﻿namespace Pirate.Core.Tests;
 
 public class Tests
 {
