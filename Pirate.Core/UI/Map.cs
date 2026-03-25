@@ -4,8 +4,6 @@ using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-using Pirate.Core.entities;
-
 namespace Pirate.Core.UI;
 static class Constants
 {
@@ -13,51 +11,6 @@ static class Constants
     public static int MAP_HEIGHT = 240;
     public static int DRAW_WIDTH = Console.WindowWidth;
     public static int DRAW_HEIGHT = Console.WindowHeight-1;
-}
-
-internal class Camera
-{
-    List<IDrawable> _drawables = new List<IDrawable>();
-    //Camera anchored to player
-    Player _player;
-    public Camera(Player player) 
-    {
-        _player = player;
-        AddObject(player);
-    }
-    public Camera(Player player, List<IDrawable> objects)
-    {
-        _player = player;
-        _drawables = objects;
-    }
-    public void AddObject(IDrawable obj)
-    {
-        _drawables.Add(obj);
-    }
-
-    public void AddObject(List<IDrawable> objects)
-    {
-        foreach (var obj in objects)
-        {
-            AddObject(obj);
-        }
-    }
-
-    public void RemoveObject(IDrawable obj)
-    {
-        _drawables.Remove(obj);
-    }
-
-    public void Render()
-    {
-        Position pos = _player.Position;
-
-        var sorted = _drawables.OrderBy(obj => obj.Priority);
-        foreach (var item in sorted)
-        {
-            item.Draw(pos);
-        }
-    }
 }
 internal class Map : IDrawable
 {
@@ -116,24 +69,4 @@ internal class Map : IDrawable
             Console.WriteLine();
         }
     }
-}
-
-public interface IDrawable
-{
-    public DrawPriority Priority { get; }
-    public void Draw(int x, int y);
-
-    public void Draw(Position position)
-    {
-        Draw(position.x, position.y);
-    }
-}
-
-public enum DrawPriority
-{
-    MAP,
-    SHIPS,
-    SETTLEMENTS,
-    PLAYER,
-    MENU,
 }

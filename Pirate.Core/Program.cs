@@ -26,6 +26,11 @@ internal class Program
         camera.AddObject(map);
         camera.Render();
         //map.Draw(95, 205);
+        string[] options = new string[2];
+        options[0] = "asdasd";
+        options[1] = "asdasdasdasd";
+        Menu menu = new Menu(options);
+        menu.Draw(15, 20);
         Console.ReadKey();
     }
 }
