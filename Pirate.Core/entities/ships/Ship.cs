@@ -2,6 +2,8 @@
 
 using System.Numerics;
 
+using Pirate.Core.UI;
+
 namespace Pirate.Core.entities.ships;
 
 internal abstract class Ship
@@ -34,6 +36,13 @@ internal abstract class Ship
     public void Move(Vector2 position)
     {
         _position = position;
+    }
+
+    private void movement(float deltaX, float deltaY)
+    {
+        float fixedX = Math.Clamp(deltaX + _position.X, 0.0f, Constants.MAP_WIDTH);
+        float fixedY = Math.Clamp(deltaY + _position.Y, 0.0f, Constants.MAP_HEIGHT);
+        _position = new Vector2(fixedX, fixedY);
     }
     public abstract void ApplyModifiers();
     public abstract void AddModifier(Modifier modifier);

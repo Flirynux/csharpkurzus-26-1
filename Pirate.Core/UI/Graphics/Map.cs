@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace Pirate.Core.UI;
+namespace Pirate.Core.UI.Graphics;
 internal class Map : IDrawable
 {
     private char[] _map;

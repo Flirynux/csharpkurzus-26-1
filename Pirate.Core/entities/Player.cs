@@ -3,10 +3,12 @@
 using Pirate.Core.entities.ships;
 using Pirate.Core.entities.ships.types;
 using Pirate.Core.UI;
+using Pirate.Core.UI.Graphics;
+using Pirate.Core.UI.Input;
 
 namespace Pirate.Core.entities;
 
-internal class Player : IDrawable
+internal class Player : IDrawable, IInputHandler
 {
     private readonly string _name;
     private Ship _flagship;
@@ -37,6 +39,7 @@ internal class Player : IDrawable
             }
     }
 
+
     public Player(string name)
     {
         _name = name;
@@ -61,7 +64,8 @@ internal class Player : IDrawable
         Console.ResetColor();
     }
 
-    public void handleMovement(ConsoleKey key)
+
+    public void HandleInput(ConsoleKey key)
     {
         switch (key) 
         {

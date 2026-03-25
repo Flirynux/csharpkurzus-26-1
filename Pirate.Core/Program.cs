@@ -6,6 +6,7 @@ using System.Numerics;
 using Pirate.Core.entities;
 using Pirate.Core.entities.ships.types;
 using Pirate.Core.UI;
+using Pirate.Core.UI.Graphics;
 
 namespace Pirate.Core;
 
@@ -30,12 +31,11 @@ internal class Program
         options[0] = "asdasd";
         options[1] = "asdasdasdasd";
         Menu menu = new Menu(options);
-        menu.Draw(15, 20);
         var input = Console.ReadKey();
         while(input.Key != ConsoleKey.Escape)
         {
             input = Console.ReadKey();
-            player.handleMovement(input.Key);
+            player.HandleInput(input.Key);
             camera.Render();
         }
         Console.ReadKey();

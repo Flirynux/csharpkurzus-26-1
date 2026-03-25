@@ -1,6 +1,6 @@
 ﻿using Pirate.Core.entities;
 
-namespace Pirate.Core.UI;
+namespace Pirate.Core.UI.Graphics;
 
 public interface IDrawable
 {

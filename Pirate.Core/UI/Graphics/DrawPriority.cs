@@ -1,4 +1,4 @@
-﻿namespace Pirate.Core.UI;
+﻿namespace Pirate.Core.UI.Graphics;
 
 public enum DrawPriority
 {

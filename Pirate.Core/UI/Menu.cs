@@ -1,10 +1,14 @@
-﻿namespace Pirate.Core.UI;
+﻿using Pirate.Core.UI.Graphics;
+
+namespace Pirate.Core.UI;
 
 //TODO handle menu options
 internal class Menu : IDrawable
 {
     public DrawPriority Priority => DrawPriority.MENU;
     List<char[]> _menuElements = new List<char[]>(8);
+    int selectedIndex = 0;
+    bool active = false;
 
     public Menu(List<char[]> menuElements)
     {
@@ -18,6 +22,8 @@ internal class Menu : IDrawable
             _menuElements.Add(menuElements[i].ToCharArray());
         } 
     }
+
+    
 
     public void Draw(int x, int y)
     {
