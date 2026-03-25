@@ -5,13 +5,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Pirate.Core.UI;
-static class Constants
-{
-    public static int MAP_WIDTH = 320;
-    public static int MAP_HEIGHT = 240;
-    public static int DRAW_WIDTH = Console.WindowWidth;
-    public static int DRAW_HEIGHT = Console.WindowHeight-1;
-}
 internal class Map : IDrawable
 {
     private char[] _map;
@@ -34,7 +27,9 @@ internal class Map : IDrawable
         for (int row = 0; row < fixedDrawHeight; row++)
         {
             List<char[]> lineSegments = new List<char[]>();
-            char[] currentSegment = _map[(((row + topY) * Constants.MAP_WIDTH) + topX)..((((row + topY) * Constants.MAP_WIDTH) + topX)+fixedDrawWidth+1)];
+            int segmentIndex = (((row + topY) * Constants.MAP_WIDTH) + topX);
+            int segmentIndexRight = segmentIndex + fixedDrawWidth + 1;
+            char[] currentSegment = _map[segmentIndex..segmentIndexRight];
             int startOfSegment = 0;
             for (int i = 1; i < fixedDrawWidth+1; i++)
             {

@@ -1,5 +1,6 @@
 ﻿namespace Pirate.Core.UI;
 
+//TODO handle menu options
 internal class Menu : IDrawable
 {
     public DrawPriority Priority => DrawPriority.MENU;
@@ -21,10 +22,10 @@ internal class Menu : IDrawable
     public void Draw(int x, int y)
     {
         int menuWidth = _menuElements.Max(obj => obj.Length) + 2;
-        for (int i = -1; i < _menuElements.Count+2; i++)
+        for (int i = -1; i < _menuElements.Count+1; i++)
         {
             Console.SetCursorPosition(x, y + i);
-            if (i == 0) {
+            if (i == -1) {
                 Console.Write("\u2554");
                 char[] chars = new char[menuWidth];
                 for (int j = 0; j < chars.Length; j++)
@@ -35,22 +36,32 @@ internal class Menu : IDrawable
                 Console.Write("\u2557");
 
             }
-            else if (i == _menuElements.Count -1)
-            {
-                Console.Write("\u255A");
-                char[] chars = new char[menuWidth];
-                for (int j = 0; j < chars.Length; j++)
+            
+            else {
+                if (i == _menuElements.Count)
                 {
-                    chars[j] = '\u2550';
+                    Console.Write("\u255A");
+                    char[] chars = new char[menuWidth];
+                    for (int j = 0; j < chars.Length; j++)
+                    {
+                        chars[j] = '\u2550';
+                    }
+                    Console.Write(chars);
+                    Console.Write("\u255D");
                 }
-                Console.Write(chars);
-                Console.Write("\u255D");
-            }
-            else 
-            {
-                Console.Write("\u2551 ");
-                Console.Write(_menuElements[i]);
-                Console.Write(" \u2551");
+                else 
+                {
+                    Console.Write("\u2551 ");
+                    int spaceCount = menuWidth - _menuElements[i].Length;
+                    char[] chars = new char[spaceCount];
+                    for (int j = 0; j < chars.Length-2; j++)
+                    {
+                        chars[j] = ' ';
+                    }
+                    Console.Write(_menuElements[i]);
+                    Console.Write(chars);
+                    Console.Write(" \u2551");
+                }
             }
         }
     }

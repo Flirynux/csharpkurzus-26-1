@@ -43,8 +43,9 @@ internal class Player : IDrawable
         _faction = new Faction(FactionType.PLAYER, "Player", 500);
         _flagship = new Sloop(_faction,
             "The Foul Oyster", 
-            new Vector2(160.0f, 60.0f));
+            new Vector2(0.0f, 0.0f));
         Ship = _flagship;
+        movement(0, 0);
     }
 
     public override string ToString()
@@ -58,5 +59,35 @@ internal class Player : IDrawable
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write(_symbol);
         Console.ResetColor();
+    }
+
+    public void handleMovement(ConsoleKey key)
+    {
+        switch (key) 
+        {
+            case ConsoleKey.W:
+                movement(0, -1);
+                break;
+            case ConsoleKey.S:
+                movement(0, 1);
+                break;
+                
+            case ConsoleKey.D:
+                movement(1,0);
+                break;
+            case ConsoleKey.A:
+                movement(-1,0);
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    private void movement(float deltaX, float deltaY) 
+    {
+        float fixedX = Math.Clamp(deltaX + _flagship._position.X, Constants.PLAYER_MOVEMENT_BORDER_LEFT, Constants.PLAYER_MOVEMENT_BORDER_RIGHT);
+        float fixedY = Math.Clamp(deltaY + _flagship._position.Y, Constants.PLAYER_MOVEMENT_BORDER_TOP, Constants.PLAYER_MOVEMENT_BORDER_BOTTOM);
+        _flagship._position = new Vector2(fixedX, fixedY);
     }
 }
