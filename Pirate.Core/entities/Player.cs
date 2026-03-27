@@ -2,9 +2,9 @@
 
 using Pirate.Core.entities.ships;
 using Pirate.Core.entities.ships.types;
-using Pirate.Core.UI;
 using Pirate.Core.UI.Graphics;
 using Pirate.Core.UI.Input;
+using Pirate.Core.Utils;
 
 namespace Pirate.Core.entities;
 
@@ -46,7 +46,7 @@ internal class Player : IDrawable, IInputHandler
         _faction = new Faction(FactionType.PLAYER, "Player", 500);
         _flagship = new Sloop(_faction,
             "The Foul Oyster", 
-            new Vector2(0.0f, 0.0f));
+            new Vector2(140.0f, 80.0f));
         Ship = _flagship;
         movement(0, 0);
     }
@@ -58,7 +58,7 @@ internal class Player : IDrawable, IInputHandler
 
     public void Draw(int x = 0, int y = 0)
     {
-        Console.SetCursorPosition(Constants.DRAW_WIDTH/2, Constants.DRAW_HEIGHT / 2);
+        Console.SetCursorPosition(Constants.DRAW_WIDTH/2, Constants.DRAW_HEIGHT / 4);
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write(_symbol);
         Console.ResetColor();

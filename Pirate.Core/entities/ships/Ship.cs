@@ -2,7 +2,7 @@
 
 using System.Numerics;
 
-using Pirate.Core.UI;
+using Pirate.Core.Utils;
 
 namespace Pirate.Core.entities.ships;
 

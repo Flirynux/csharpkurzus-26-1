@@ -31,13 +31,13 @@ internal class Program
         options[0] = "asdasd";
         options[1] = "asdasdasdasd";
         Menu menu = new Menu(options);
-        var input = Console.ReadKey();
+        var input = new ConsoleKeyInfo();
         while(input.Key != ConsoleKey.Escape)
         {
-            input = Console.ReadKey();
-            player.HandleInput(input.Key);
             camera.Render();
+            input = Console.ReadKey(true);
+            player.HandleInput(input.Key);
         }
-        Console.ReadKey();
+        return;
     }
 }
