@@ -6,5 +6,6 @@ public enum FactionType
     SPANISH,
     ENGLISH,
     FRENCH,
-    DUTCH
+    DUTCH,
+    PIRATE
 }

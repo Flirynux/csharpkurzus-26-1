@@ -40,11 +40,12 @@ internal class Player : IDrawable, IInputHandler
     }
 
 
-    public Player(string name)
+    public Player(Navmap navmap, string name)
     {
         _name = name;
         _faction = new Faction(FactionType.PLAYER, "Player", 500);
         _flagship = new Sloop(_faction,
+            navmap,
             "The Foul Oyster", 
             new Vector2(140.0f, 80.0f));
         Ship = _flagship;
@@ -81,6 +82,9 @@ internal class Player : IDrawable, IInputHandler
                 break;
             case ConsoleKey.A:
                 movement(-1,0);
+                break;
+            case ConsoleKey.Enter:
+                Console.WriteLine(Position.ToString());
                 break;
             default:
                 break;

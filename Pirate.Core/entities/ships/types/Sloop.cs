@@ -6,8 +6,9 @@ namespace Pirate.Core.entities.ships.types;
 
 internal class Sloop : Ship
 {
-    public Sloop(Faction faction, string name, Vector2 position) : base(
+    public Sloop(Faction faction, Navmap navmap, string name, Vector2 position) : base(
         faction,
+        navmap,
         name,
         position)
     {

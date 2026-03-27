@@ -21,10 +21,12 @@ internal abstract class Ship
 
     public Modifier[] _modifiers;
     public Faction _faction;
+    private Navmap _navmap;
 
-    public Ship(Faction faction, string name, Vector2 position)
+    public Ship(Faction faction,Navmap navmap, string name, Vector2 position)
     {
         _faction = faction;
+        _navmap = navmap;
         _name = name;
         _maxSpeed = 10;
         _crew = 8;

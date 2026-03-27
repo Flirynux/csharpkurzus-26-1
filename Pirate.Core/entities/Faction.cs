@@ -4,9 +4,10 @@ namespace Pirate.Core.entities;
 
 internal class Faction
 {
-    private readonly FactionType _type;
+    public readonly FactionType _type;
     private int _wealth;
     private List<Ship> _ships;
+    private List<Settlement> _settlements;
     private readonly string _name;
 
     public int Wealth { get { return _wealth; } }
@@ -19,6 +20,7 @@ internal class Faction
         _name = name;
         _wealth = wealth;
         _ships = new List<Ship>();
+        _settlements = new List<Settlement>();
     }
     public void AddShip(Ship ship)
     {
@@ -28,6 +30,16 @@ internal class Faction
     public void RemoveShip(Ship ship)
     {
         _ships.Remove(ship);
+    }
+
+    public void AddSettlement(Settlement settlement)
+    {
+        _settlements.Add(settlement);
+    }
+
+    public void RemoveSettlement(Settlement settlement)
+    {
+        _settlements.Remove(settlement);
     }
 
     public override string ToString()
