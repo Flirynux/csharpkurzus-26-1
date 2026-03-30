@@ -37,7 +37,10 @@ internal abstract class Ship
     }
     public void Move(Vector2 position)
     {
-        _position = position;
+        if (_navmap.IsSailable(position))
+        {
+            _position = position;
+        }
     }
 
     private void movement(float deltaX, float deltaY)

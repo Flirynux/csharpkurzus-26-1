@@ -1,26 +1,26 @@
 Empire,Settlement Name,x,y
 Spanish,Havana,193,68
-Spanish,Santo Domingo,394,256
-Spanish,San Juan,475,238
-Spanish,Cartagena,301,422
-Spanish,Porto Bello,214,397
-Spanish,Panama (City),225,417
-Spanish,Maracaibo,396,424
-Spanish,Trinidad,215,138
-Spanish,Santiago,286,181
-Spanish,Merida,55,156
-Spanish,Campeachy,31,188
-Spanish,Truxillo,106,299
-English,Port Royal,270,252
-English,Nassau,302,57
+Spanish,Santo Domingo,489,193
+Spanish,San Juan,583,186
+Spanish,Cartagena,234,100
+Spanish,Porto Bello,262,371
+Spanish,Panama (City),266,440
+Spanish,Maracaibo,444,386
+Spanish,Trinidad,255,115
+Spanish,Santiago,338,157
+Spanish,Merida,67,145
+Spanish,Campeachy,38,175
+Spanish,Truxillo,107,248
+English,Port Royal,331,135
+English,Nassau,370,53
 English,Bridgetown,595,380
-English,Belize,73,245
+English,Belize,49,204
 English,Antigua,568,273
 French,Tortuga,345,179
-French,Port au Prince,336,254
+French,Port au Prince,423,191
 French,St. Pierre,585,342
 French,Guadeloupe,557,304
-Dutch,Curacao,461,383
+Dutch,Curacao,508,351
 Pirate,Tortuga,345,179
 Pirate,Old Bahama Ch.,252,87
 Pirate,Tortuga (Ven.),506,425
@@ -28,6 +28,6 @@ Pirate,Virgin Gorda,515,236
 Pirate,St. Thomas,494,248
 Pirate,Roatan (I. Ruatan),105,267
 Pirate,Providence I.,176,335
-Pirate,Pearl Keys Pt.,144,374
-Pirate,Sta. Cruz,263,203
+Pirate,Pearl Keys Pt.,157,341
+Pirate,Sta. Cruz,297,137
 Pirate,Eleuthera I.,314,65

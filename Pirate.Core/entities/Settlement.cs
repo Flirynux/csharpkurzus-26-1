@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 using Pirate.Core.UI.Graphics;
@@ -35,12 +36,25 @@ internal class Settlement : IDrawable
 
         int topX = x - (Constants.DRAW_WIDTH / 2);
         int topY = y - (Constants.DRAW_HEIGHT / 2);
-        if (topX < _position.x && _position.x < topX + Constants.DRAW_WIDTH &&
+        if (topX < _position.x && _position.x < topX + Constants.DRAW_WIDTH - 1 &&
            topY < _position.y && _position.y < topY + Constants.DRAW_HEIGHT) 
         {
             Console.SetCursorPosition(_position.x-topX, (_position.y-topY)/2);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write('X');
+            int maxTextLength =Constants.DRAW_WIDTH - (_position.x-topX)-3;
+            if (maxTextLength > 0) 
+            {
+                Console.SetCursorPosition(_position.x - topX + 2, (_position.y - topY) / 2);
+                if (maxTextLength < _name.Length)
+                {
+                    Console.Write(_name.Substring(0, maxTextLength));
+                }
+                else
+                {
+                    Console.Write(_name);
+                }
+            }
         }
     }
 }

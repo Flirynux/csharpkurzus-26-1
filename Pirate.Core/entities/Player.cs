@@ -59,7 +59,7 @@ internal class Player : IDrawable, IInputHandler
 
     public void Draw(int x = 0, int y = 0)
     {
-        Console.SetCursorPosition(Constants.DRAW_WIDTH/2, Constants.DRAW_HEIGHT / 4);
+        Console.SetCursorPosition(Constants.DRAW_WIDTH/2, Constants.DRAW_HEIGHT / (2*Constants.VERTICAL_SCALE));
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write(_symbol);
         Console.ResetColor();
@@ -96,6 +96,6 @@ internal class Player : IDrawable, IInputHandler
     {
         float fixedX = Math.Clamp(deltaX + _flagship._position.X, Constants.PLAYER_MOVEMENT_BORDER_LEFT, Constants.PLAYER_MOVEMENT_BORDER_RIGHT);
         float fixedY = Math.Clamp(deltaY + _flagship._position.Y, Constants.PLAYER_MOVEMENT_BORDER_TOP, Constants.PLAYER_MOVEMENT_BORDER_BOTTOM);
-        _flagship._position = new Vector2(fixedX, fixedY);
+        _flagship.Move(new Vector2(fixedX, fixedY));
     }
 }

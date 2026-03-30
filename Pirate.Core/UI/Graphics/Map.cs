@@ -14,8 +14,15 @@ internal class Map : IDrawable
 
     public Map(string path)
     {
-        string temp = File.ReadAllText(path);
-        temp = temp.Replace("\n", "").Replace("\r", "").Replace(" ", "");
+        string[] lines = File.ReadAllLines(path);
+
+        if (lines.Length == 0) throw new FileLoadException("Map file is empty.");
+        string temp = lines[0].Trim();
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            temp = string.Concat(temp, line);
+        }
         _map = temp.ToCharArray();
     }
 
