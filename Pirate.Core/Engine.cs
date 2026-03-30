@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 using Pirate.Core.entities;
+using Pirate.Core.entities.ships.types;
 using Pirate.Core.UI.Graphics;
 
 namespace Pirate.Core;
@@ -12,11 +14,17 @@ internal class Engine
     Camera _camera;
     Player _player;
     List<Faction> _factions;
+    static Random s_random;
+    static Navmap s_navmap;
 
-    public Engine(Camera camera, Player player)
+    public static Random Random {  get { return s_random; } }
+
+    public Engine(Camera camera, Player player, Navmap navmap, Random random)
     {
         _camera = camera;
         _player = player;
+        s_navmap = navmap;
+        s_random = random;
         _factions = new List<Faction>(4);
     }
 
@@ -24,14 +32,15 @@ internal class Engine
     {
         initFactions();
         initSettlements();
+        initShips();
     }
 
     private void initFactions()
     {
-        Faction brits = new Faction(FactionType.ENGLISH, "English");
-        Faction spanish = new Faction(FactionType.SPANISH, "Spanish");
-        Faction dutch = new Faction(FactionType.DUTCH, "Dutch");
-        Faction french = new Faction(FactionType.FRENCH, "French");
+        Faction brits = new Faction(FactionType.ENGLISH, "English",s_random);
+        Faction spanish = new Faction(FactionType.SPANISH, "Spanish", s_random);
+        Faction dutch = new Faction(FactionType.DUTCH, "Dutch", s_random);
+        Faction french = new Faction(FactionType.FRENCH, "French", s_random);
 
         _factions.Add(brits);
         _factions.Add(spanish);
@@ -88,23 +97,40 @@ internal class Engine
 
                 Faction faction = _factions.Find(f => f._type.Equals(type));
 
-                // Default to a neutral/pirate faction if not found
                 if (faction == null) continue;
 
-                // 2. Create the Position and Settlement
                 Position pos = new Position(x, y);
                 Settlement settlement = new Settlement(faction, pos, cityName);
 
-                // 3. Add to the faction's internal list (assuming Faction has an AddSettlement method)
                 faction.AddSettlement(settlement);
                 _camera.AddObject(settlement);
             }
         }
     }
 
+    private void initShips()
+    {
+        foreach (var faction in _factions)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                int r = s_random.Next(faction.Settlements.Count);
+                Sloop temp = new Sloop(faction, s_navmap,i.ToString(), faction.Settlements[r].Position, s_random);
+                _camera.AddObject(temp);
+            }
+        }
+    }
+
     public void Update()
     {
-
+        foreach (var item in _factions)
+        {
+            foreach (var ship in item.Ships)
+            {
+                ship.Update();
+            }
+        }
+        _camera.Render();
     }
 
     public void Save()

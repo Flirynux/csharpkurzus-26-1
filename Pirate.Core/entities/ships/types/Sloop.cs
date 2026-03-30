@@ -6,11 +6,12 @@ namespace Pirate.Core.entities.ships.types;
 
 internal class Sloop : Ship
 {
-    public Sloop(Faction faction, Navmap navmap, string name, Vector2 position) : base(
+    public Sloop(Faction faction, Navmap navmap, string name, Vector2 position, Random random) : base(
         faction,
         navmap,
         name,
-        position)
+        position,
+        random)
     {
         _maxSpeed = 15;
         _crew = 6;

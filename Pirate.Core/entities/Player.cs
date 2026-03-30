@@ -40,14 +40,15 @@ internal class Player : IDrawable, IInputHandler
     }
 
 
-    public Player(Navmap navmap, string name)
+    public Player(Navmap navmap, Random random, string name)
     {
         _name = name;
-        _faction = new Faction(FactionType.PLAYER, "Player", 500);
+        _faction = new Faction(FactionType.PLAYER, "Player", random, 500);
         _flagship = new Sloop(_faction,
             navmap,
             "The Foul Oyster", 
-            new Vector2(140.0f, 80.0f));
+            new Vector2(140.0f, 80.0f),
+            random);
         Ship = _flagship;
         movement(0, 0);
     }

@@ -18,19 +18,20 @@ internal class Program
         string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "map_binary.txt");
         Map map = new Map(filePath);
         Navmap navmap = new Navmap(filePath);
-        Player player = new Player(navmap,"Playa");
+        Random rand = new Random();
+        Player player = new Player(navmap, rand, "Playa");
         Camera camera = new Camera(player);
         camera.AddObject(map);
         //string[] options = new string[2];
         //options[0] = "asdasd";
         //options[1] = "asdasdasdasd";
         //Menu menu = new Menu(options);
-        Engine engine = new Engine(camera,player);
+        Engine engine = new Engine(camera, player, navmap, rand);
         engine.Init();
         var input = new ConsoleKeyInfo();
         while(input.Key != ConsoleKey.Escape)
         {
-            camera.Render();
+            engine.Update();
             input = Console.ReadKey(true);
             player.HandleInput(input.Key);
         }

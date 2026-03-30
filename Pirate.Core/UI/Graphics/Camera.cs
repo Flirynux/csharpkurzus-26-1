@@ -20,6 +20,7 @@ internal class Camera
     public void AddObject(IDrawable obj)
     {
         _drawables.Add(obj);
+        SortObjects();
     }
 
     public void AddObject(List<IDrawable> objects)
@@ -33,6 +34,12 @@ internal class Camera
     public void RemoveObject(IDrawable obj)
     {
         _drawables.Remove(obj);
+        SortObjects();
+    }
+
+    private void SortObjects()
+    {
+        _drawables = _drawables.OrderBy(item => item.Priority).ToList();
     }
 
     public void Render()

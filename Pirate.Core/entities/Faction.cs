@@ -10,17 +10,26 @@ internal class Faction
     private List<Settlement> _settlements;
     private readonly string _name;
 
-    public int Wealth { get { return _wealth; } }
+    private List<Faction> _allies = new List<Faction>();
+    private List<Faction> _enemies = new List<Faction>();
 
+    private static Random _rnd;
+
+    public List<Faction> Allies {  get { return _allies; } }
+    public List<Faction> Enemies {  get { return _enemies; } }
+    public List<Settlement> Settlements {  get { return _settlements; } }
+    public List<Ship> Ships { get { return _ships; } }
+    public int Wealth { get { return _wealth; } }
     public string Name {  get { return _name; } }
 
-    public Faction(FactionType type, string name, int wealth = 10000)
+    public Faction(FactionType type, string name, Random random, int wealth = 10000)
     {
         _type = type;
         _name = name;
         _wealth = wealth;
         _ships = new List<Ship>();
         _settlements = new List<Settlement>();
+        _rnd = random;
     }
     public void AddShip(Ship ship)
     {
@@ -40,6 +49,25 @@ internal class Faction
     public void RemoveSettlement(Settlement settlement)
     {
         _settlements.Remove(settlement);
+    }
+
+    public void Alliance(Faction ally)
+    {
+        _allies.Add(ally);
+        ally.Alliance(this);
+    }
+
+    public void War(Faction enemy)
+    {
+        _enemies.Add(enemy);
+        enemy.War(this);
+    }
+
+    public void SetNeutralRelation(Faction other)
+    {
+        _allies.Remove(other);
+        _enemies.Remove(other);
+        other.SetNeutralRelation(this);
     }
 
     public override string ToString()
