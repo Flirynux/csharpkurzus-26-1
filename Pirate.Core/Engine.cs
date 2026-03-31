@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 
@@ -14,17 +15,25 @@ internal class Engine
     Camera _camera;
     Player _player;
     List<Faction> _factions;
-    static Random s_random;
+    static Random s_random = new Random(42);
     static Navmap s_navmap;
+    static Stopwatch timer = new Stopwatch();
 
+    EngineState _state = EngineState.STOPPED; 
+
+    public EngineState State {  get { return _state; } }
     public static Random Random {  get { return s_random; } }
 
-    public Engine(Camera camera, Player player, Navmap navmap, Random random)
+    public Engine()
     {
-        _camera = camera;
-        _player = player;
+
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "map_binary.txt");
+        Map map = new Map(filePath);
+        Navmap navmap = new Navmap(filePath);
+        _player = new Player(navmap, s_random, "Playa");
+        _camera = new Camera(_player);
+        _camera.AddObject(map);
         s_navmap = navmap;
-        s_random = random;
         _factions = new List<Faction>(4);
     }
 
@@ -123,6 +132,9 @@ internal class Engine
 
     public void Update()
     {
+
+        var input = Console.ReadKey(true);
+        _player.HandleInput(input.Key);
         foreach (var item in _factions)
         {
             foreach (var ship in item.Ships)
@@ -147,4 +159,11 @@ internal class Engine
     {
 
     }
+}
+
+public enum EngineState
+{
+    STOPPED,
+    RUNNING,
+    EXIT
 }
