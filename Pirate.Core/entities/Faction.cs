@@ -1,4 +1,5 @@
 ﻿using Pirate.Core.entities.ships;
+using Pirate.Core.UI.Graphics;
 
 namespace Pirate.Core.entities;
 
@@ -79,5 +80,24 @@ internal class Faction
             res += "\t" + ship.ToString() + "\n";
         }
         return res;
+    }
+
+    // Returns RGB values for the given faction
+    // single source of truth for drawing
+    public RGB GetFactionColor()
+    {
+        switch (_type)
+        {
+            case FactionType.ENGLISH:
+                return new RGB { R = 255, G = 0, B = 0 };
+            case FactionType.DUTCH:
+                return new RGB { R = 0, G = 127, B = 127 };
+            case FactionType.FRENCH:
+                return new RGB { R = 0, G = 0, B = 255 };
+            case FactionType.SPANISH:
+                return new RGB { R = 0, G = 255, B = 255 };
+            default:
+                return new RGB { R = 127, G = 127, B = 127 };
+        }
     }
 }

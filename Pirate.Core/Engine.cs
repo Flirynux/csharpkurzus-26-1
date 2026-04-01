@@ -12,12 +12,11 @@ namespace Pirate.Core;
 
 internal class Engine
 {
-    Camera _camera;
-    Player _player;
-    List<Faction> _factions;
-    static Random s_random = new Random(42);
-    static Navmap s_navmap;
-    static Stopwatch timer = new Stopwatch();
+    private readonly Camera _camera;
+    private readonly Player _player;
+    private readonly List<Faction> _factions;
+    private readonly static Random s_random = new Random(42);
+    private static Navmap s_navmap;
 
     EngineState _state = EngineState.STOPPED; 
 
@@ -130,18 +129,26 @@ internal class Engine
         }
     }
 
-    public void Update()
+    public void Update(float deltaTime)
     {
 
-        var input = Console.ReadKey(true);
-        _player.HandleInput(input.Key);
+        if (Console.KeyAvailable)
+        {
+            var key = Console.ReadKey(true).Key;
+            _player.HandleInput(key, deltaTime);
+        }
+        _player.Update(deltaTime);
         foreach (var item in _factions)
         {
             foreach (var ship in item.Ships)
             {
-                ship.Update();
+                ship.Update(deltaTime);
             }
         }
+    }
+
+    public void Render()
+    {
         _camera.Render();
     }
 

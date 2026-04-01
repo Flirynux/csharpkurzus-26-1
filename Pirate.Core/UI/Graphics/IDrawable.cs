@@ -5,10 +5,10 @@ namespace Pirate.Core.UI.Graphics;
 public interface IDrawable
 {
     public DrawPriority Priority { get; }
-    public void Draw(int x, int y);
+    public void Draw(RenderBuffer renderBuffer, int x, int y);
 
-    public void Draw(Position position)
+    public void Draw(RenderBuffer renderBuffer, Position position)
     {
-        Draw(position.x, position.y);
+        Draw(renderBuffer, position.x, position.y);
     }
 }

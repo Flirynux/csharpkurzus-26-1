@@ -31,30 +31,33 @@ internal class Settlement : IDrawable
         _wealth = wealth;
     }
 
-    public void Draw(int x, int y)
+    public void Draw(RenderBuffer renderBuffer, int x, int y)
     {
 
         int topX = x - (Constants.DRAW_WIDTH / 2);
         int topY = y - (Constants.DRAW_HEIGHT / 2);
+        // Checks if inside the cameras view
         if (topX < _position.x && _position.x < topX + Constants.DRAW_WIDTH - 1 &&
-           topY < _position.y && _position.y < topY + Constants.DRAW_HEIGHT) 
+           topY < _position.y && _position.y < topY + Constants.DRAW_HEIGHT)
         {
-            Console.SetCursorPosition(_position.x-topX, (_position.y-topY)/2);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write('X');
-            int maxTextLength =Constants.DRAW_WIDTH - (_position.x-topX)-3;
-            if (maxTextLength > 0) 
+            RGB foregroundColor = _faction.GetFactionColor();
+            renderBuffer[_position.x - topX, (_position.y - topY)] = new Pixel
             {
-                Console.SetCursorPosition(_position.x - topX + 2, (_position.y - topY) / 2);
-                if (maxTextLength < _name.Length)
+                Character = 'X',
+                textRGB = foregroundColor,
+            };
+            // Checks how much of the name can fit on screen, writes the fitting part
+            int maxTextLength = Constants.DRAW_WIDTH - (_position.x - topX) - 3;
+            if (maxTextLength > _name.Length) maxTextLength = _name.Length;
+            for (int i = 0; i < maxTextLength; i++)
+            {
+                renderBuffer[_position.x - topX + 2 + i, (_position.y - topY)] = new Pixel
                 {
-                    Console.Write(_name.Substring(0, maxTextLength));
-                }
-                else
-                {
-                    Console.Write(_name);
-                }
+                    Character = _name[i],
+                    textRGB = foregroundColor,
+                    bgRGB = new RGB(0,0,0)
+                };
             }
-        }
+        } 
     }
 }

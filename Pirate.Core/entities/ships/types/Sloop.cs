@@ -13,7 +13,7 @@ internal class Sloop : Ship
         position,
         random)
     {
-        _maxSpeed = 15;
+        _maxSpeed = 8;
         _crew = 6;
         _cannons = 2;
         _modifiers = new Modifier[8];

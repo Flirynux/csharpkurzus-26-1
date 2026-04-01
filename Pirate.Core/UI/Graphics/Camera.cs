@@ -1,4 +1,7 @@
-﻿using Pirate.Core.entities;
+﻿using System.Reflection.Metadata;
+using System.Text;
+
+using Pirate.Core.entities;
 
 namespace Pirate.Core.UI.Graphics;
 
@@ -7,6 +10,8 @@ internal class Camera
     List<IDrawable> _drawables = new List<IDrawable>();
     //Camera anchored to player
     Player _player;
+    RenderBuffer _buffer = new RenderBuffer();
+    private readonly StringBuilder _builder = new StringBuilder();
     public Camera(Player player) 
     {
         _player = player;
@@ -42,14 +47,59 @@ internal class Camera
         _drawables = _drawables.OrderBy(item => item.Priority).ToList();
     }
 
+    // Used some AI for ANSI
     public void Render()
     {
-        Position pos = _player.Position;
+        WriteRenderBuffer();
 
-        var sorted = _drawables.OrderBy(obj => obj.Priority);
-        foreach (var item in sorted)
+        _builder.Clear();
+        _builder.Append("\x1b[H"); // Move cursor to top-left
+
+        for (int y = 0; y < _buffer.Height; y += 2)
         {
-            item.Draw(pos);
+            for (int x = 0; x < _buffer.Width; x++)
+            {
+                Pixel top = _buffer[x, y];
+                Pixel bottom = _buffer[x, y + 1];
+
+                // Assumption: normal map tile
+                RGB fg = top.textRGB;
+                RGB bg = bottom.textRGB;
+                char displayChar = top.Character == '\0' ? ' ' : top.Character;
+
+                // Check if pixel contains entity/text  (not half-block)
+                bool topHasText = top.Character != '\u2580' && top.Character != '\0';
+                bool bottomHasText = bottom.Character != '\u2580' && bottom.Character != '\0';
+
+                if (topHasText)
+                {
+                    displayChar = top.Character;
+                    fg = top.textRGB;
+                    bg = new RGB(0, 0, 0); // Force black background for readability
+                }
+                else if (bottomHasText)
+                {
+                    displayChar = bottom.Character;
+                    fg = bottom.textRGB;   // Grab the text color from the bottom pixel
+                    bg = new RGB(0, 0, 0); // Force black background for readability
+                }
+
+                // Apply colors and draw the character
+                _builder.Append($"\x1b[38;2;{fg.R};{fg.G};{fg.B}m");
+                _builder.Append($"\x1b[48;2;{bg.R};{bg.G};{bg.B}m");
+                _builder.Append(displayChar);
+            }
+            _builder.Append("\x1b[0m\n");
+        }
+
+        Console.Write(_builder.ToString());
+    }
+
+    private void WriteRenderBuffer()
+    {
+        foreach (var drawable in _drawables)
+        {
+            drawable.Draw(_buffer, _player.Position);
         }
     }
 }

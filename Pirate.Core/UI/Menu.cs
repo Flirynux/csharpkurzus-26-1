@@ -3,7 +3,7 @@
 namespace Pirate.Core.UI;
 
 //TODO handle menu options
-internal class Menu : IDrawable
+internal class Menu
 {
     public DrawPriority Priority => DrawPriority.MENU;
     List<char[]> _menuElements = new List<char[]>(8);
