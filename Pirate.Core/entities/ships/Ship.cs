@@ -19,7 +19,12 @@ internal abstract class Ship : IDrawable
     public int _cargoHoldCapacity = 10;
     public Vector2 _position;
 
+    private Vector2 _lastFramePos;
+    private Vector2 _start;
     private Vector2 _destination;
+    private bool wallHugging = false;
+    private float _hitDistance;
+    private int _hasntMoved;
 
     public Modifier[] _modifiers;
     public Faction _faction;
@@ -47,6 +52,8 @@ internal abstract class Ship : IDrawable
         faction.AddShip(this);
         _position = position;
         _rnd = random;
+        _lastFramePos = _position;
+        _hasntMoved = _rnd.Next(30) + 30;
     }
     public bool Move(Vector2 deltaPosition,float deltaTime)
     {
@@ -70,26 +77,102 @@ internal abstract class Ship : IDrawable
         goToDestination(deltaTime);
     }
 
+    private bool checkIfStuck()
+    {
+        if (_lastFramePos == _position)
+        {
+            _hasntMoved--;
+        }
+        else
+        {
+            _hasntMoved = 60;
+        }
 
+        return _hasntMoved == 0;
+    }
     private void goToDestination(float deltaTime)
     {
-        // If at the current destination find a new one
+        if (checkIfStuck())
+        {
+            _position = new Vector2(20f,20f);
+            findNewDestination();
+        }
         if (arrivedAtDestination())
         {
             findNewDestination();
-        } 
+            wallHugging = false;
+        }
+       
 
-        Vector2 direction = _destination - _position;
-        Vector2 normalized = Vector2.Normalize(direction);
-        for (int i = 0; i < 4; i++)
+        Vector2 dirToGoal = Vector2.Normalize(_destination - _position);
+        float distToGoal = Vector2.Distance(_position, _destination);
+
+        // Open terrain
+        if (!wallHugging)
         {
-            // TODO Better pathfinding
-            if(!Move(normalized,deltaTime))
+            if (!Move(dirToGoal, deltaTime))
             {
-                normalized = new Vector2(normalized.Y, -normalized.X);
+                wallHugging = true;
+                _hitDistance = distToGoal;
             }
         }
+        // Wall huggging
+        else
+        {
+            bool crossedLine = Math.Sign(DistToMLine(_position)) != Math.Sign(DistToMLine(_lastFramePos));
+            if ((crossedLine || NearMLine()) && distToGoal < _hitDistance - 1.0f)
+            {
+                if (_navmap.IsSailable(_position + dirToGoal))
+                {
+                    wallHugging = false;
+                }
+            }
+
+            Vector2 escapeDir = dirToGoal;
+            bool foundPath = false;
+
+            for (float angle = 10; angle < 360; angle += 10)
+            {
+                Vector2 testDir = RotateVector(dirToGoal, angle);
+                if (_navmap.IsSailable(_position + testDir))
+                {
+                    Move(testDir, deltaTime);
+                    foundPath = true;
+                    break;
+                }
+            }
+
+            if (!foundPath) wallHugging = false; // Reset if stuck
+        }
+
+        _lastFramePos = _position;
         ClampInbounds();
+    }
+
+    private Vector2 RotateVector(Vector2 v, float degrees)
+    {
+        float radians = degrees * (MathF.PI / 180f);
+        float sin = MathF.Sin(radians);
+        float cos = MathF.Cos(radians);
+        return new Vector2(v.X * cos - v.Y * sin, v.X * sin + v.Y * cos);
+    }
+
+    private bool NearMLine(float threshold = 0.1f)
+    {
+        Vector2 mLine = _destination - _start;
+        Vector2 shipVec = _position - _start;
+
+        float distToLine = MathF.Abs(DistToMLine(_position)) / mLine.Length();
+
+        return distToLine < threshold;
+    }
+
+    private float DistToMLine(Vector2 position)
+    {
+        Vector2 mLine = _destination - _start;
+        Vector2 shipVec = position - _start;
+
+        return mLine.X * shipVec.Y - mLine.Y * shipVec.X;
     }
     // Selects a random settlements from own or any allied faction
     // Sets selevted settlement as destination
@@ -104,6 +187,7 @@ internal abstract class Ship : IDrawable
         int r = _rnd.Next(alliedSettlements.Count);
         Settlement selected = alliedSettlements[r];
         _destination = selected.Position;
+        _start = new Vector2(_position.X, _position.Y);
     }
 
     private bool arrivedAtDestination()

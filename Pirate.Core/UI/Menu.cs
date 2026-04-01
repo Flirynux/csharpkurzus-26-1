@@ -3,7 +3,7 @@
 namespace Pirate.Core.UI;
 
 //TODO handle menu options
-internal class Menu
+internal class Menu : IDrawable
 {
     public DrawPriority Priority => DrawPriority.MENU;
     List<char[]> _menuElements = new List<char[]>(8);
@@ -24,49 +24,97 @@ internal class Menu
     }
 
     
-
-    public void Draw(int x, int y)
+    public void Draw(RenderBuffer renderBuffer, int x, int y)
     {
         int menuWidth = _menuElements.Max(obj => obj.Length) + 2;
         for (int i = -1; i < _menuElements.Count+1; i++)
         {
-            Console.SetCursorPosition(x, y + i);
             if (i == -1) {
-                Console.Write("\u2554");
-                char[] chars = new char[menuWidth];
-                for (int j = 0; j < chars.Length; j++)
+                renderBuffer[x, y + i] = new Pixel
                 {
-                    chars[j] = '\u2550';
+                    Character = '\u2554',
+                    textRGB = new RGB(255,255,255),
+                    bgRGB = new RGB(0,0,0),
+
+                };
+                for (int j = 0; j < menuWidth; j++)
+                {
+                    renderBuffer[x + j, y + i] = new Pixel
+                    {
+                        Character = '\u2550',
+                        textRGB = new RGB(255, 255, 255),
+                        bgRGB = new RGB(0, 0, 0),
+
+                    };
                 }
-                Console.Write(chars);
-                Console.Write("\u2557");
+                renderBuffer[x, y + i] = new Pixel
+                {
+                    Character = '\u2557',
+                    textRGB = new RGB(255, 255, 255),
+                    bgRGB = new RGB(0, 0, 0),
+
+                };
 
             }
             
             else {
                 if (i == _menuElements.Count)
                 {
-                    Console.Write("\u255A");
-                    char[] chars = new char[menuWidth];
-                    for (int j = 0; j < chars.Length; j++)
+                    renderBuffer[x, y + i] = new Pixel
                     {
-                        chars[j] = '\u2550';
+                        Character = '\u255A',
+                        textRGB = new RGB(255, 255, 255),
+                        bgRGB = new RGB(0, 0, 0),
+
+                    };
+                    for (int j = 0; j < menuWidth; j++)
+                    {
+                        renderBuffer[x, y + i + j] = new Pixel
+                        {
+                            Character = '\u2550',
+                            textRGB = new RGB(255, 255, 255),
+                            bgRGB = new RGB(0, 0, 0),
+
+                        };
                     }
-                    Console.Write(chars);
-                    Console.Write("\u255D");
+                    renderBuffer[x, y + i] = new Pixel
+                    {
+                        Character = '\u255D',
+                        textRGB = new RGB(255, 255, 255),
+                        bgRGB = new RGB(0, 0, 0),
+
+                    };
                 }
                 else 
                 {
-                    Console.Write("\u2551 ");
-                    int spaceCount = menuWidth - _menuElements[i].Length;
-                    char[] chars = new char[spaceCount];
-                    for (int j = 0; j < chars.Length-2; j++)
+                    renderBuffer[x, y + i] = new Pixel
                     {
-                        chars[j] = ' ';
+                        Character = '\u2551',
+                        textRGB = new RGB(255, 255, 255),
+                        bgRGB = new RGB(0, 0, 0),
+
+                    };
+                    int spaceCount = menuWidth - _menuElements[i].Length;
+                    if (i == selectedIndex)
+                    {
+                        renderBuffer[x, y + i] = new Pixel
+                        {
+                            Character = '>',
+                            textRGB = new RGB(255, 255, 255),
+                            bgRGB = new RGB(0, 0, 0),
+
+                        };
                     }
-                    Console.Write(_menuElements[i]);
-                    Console.Write(chars);
-                    Console.Write(" \u2551");
+                    for (int j = 0; j < spaceCount-2; j++)
+                    {
+                    }
+                    renderBuffer[x, y + i] = new Pixel
+                    {
+                        Character = '\u2551',
+                        textRGB = new RGB(255, 255, 255),
+                        bgRGB = new RGB(0, 0, 0),
+
+                    };
                 }
             }
         }
