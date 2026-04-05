@@ -33,7 +33,6 @@ internal class Navmap
         }
     }
 
-    // Public read-only access
     public bool IsSailable(int x, int y)
     {
         if (y < 0 || y >= Constants.MAP_HEIGHT || x < 0 || x >= Constants.MAP_WIDTH)

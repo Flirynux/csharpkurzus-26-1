@@ -9,23 +9,19 @@ using Pirate.Core.Utils;
 namespace Pirate.Core.UI.Graphics;
 internal class Map : IDrawable
 {
-    private readonly char[] _map;
+    private readonly char[][] _map = new char[Constants.MAP_HEIGHT][];
     DrawPriority IDrawable.Priority => DrawPriority.MAP;
 
-    // TODO change map from linear array
-    //it's no longer useful, just more confusing
     public Map(string path)
     {
         string[] lines = File.ReadAllLines(path);
 
-        if (lines.Length == 0) throw new FileLoadException("Map file is empty.");
-        string temp = lines[0].Trim();
-        for (int i = 1; i < lines.Length; i++)
+        if (lines.Length == 0) throw new IOException("Map file is empty.");
+        for (int i = 0; i < lines.Length; i++)
         {
             string line = lines[i].Trim();
-            temp = string.Concat(temp, line);
+            _map[i] = line.ToCharArray();
         }
-        _map = temp.ToCharArray();
     }
 
     public void Draw(RenderBuffer renderBuffer, int x, int y)
@@ -46,9 +42,7 @@ internal class Map : IDrawable
                 if (mapX >= 0 && mapX < Constants.MAP_WIDTH 
                     && mapY >= 0 && mapY < Constants.MAP_HEIGHT)
                 {
-                    // TODO change map from linear array
-                    int mapIndex = mapY * Constants.MAP_WIDTH + mapX;
-                    char mapChar = _map[mapIndex];
+                    char mapChar = _map[mapY][mapX];
 
                     RGB pixelColor = getColorFromChar(mapChar);
                     renderBuffer[col, row] = new Pixel

@@ -2,17 +2,16 @@
 
 namespace Pirate.Core.UI;
 
-//TODO handle menu options
 internal class Menu : IDrawable
 {
     public DrawPriority Priority => DrawPriority.MENU;
-    List<char[]> _menuElements = new List<char[]>(8);
-    int selectedIndex = 0;
-    bool active = false;
+    List<char[]> _menuElements = new List<char[]>();
+    public int selectedIndex = 0;
+    public bool active = true;
 
     public Menu(List<char[]> menuElements)
     {
-        _menuElements = menuElements; 
+        _menuElements = menuElements;
     }
 
     public Menu(string[] menuElements)
@@ -20,100 +19,66 @@ internal class Menu : IDrawable
         for (int i = 0; i < menuElements.Length; i++)
         {
             _menuElements.Add(menuElements[i].ToCharArray());
-        } 
+        }
     }
 
-    
-    public void Draw(RenderBuffer renderBuffer, int x, int y)
+    public void Draw(RenderBuffer renderBuffer, int camX, int camY)
     {
-        int menuWidth = _menuElements.Max(obj => obj.Length) + 2;
-        for (int i = -1; i < _menuElements.Count+1; i++)
+        if (!active || _menuElements.Count == 0) return;
+
+        int startX = 10;
+        int startY = 10;
+
+        int maxTextLen = _menuElements.Max(obj => obj.Length);
+        int menuWidth = maxTextLen + 5;
+
+        int menuHeight = (_menuElements.Count * 2) + 3;
+
+        for (int row = 0; row < menuHeight; row++)
         {
-            if (i == -1) {
-                renderBuffer[x, y + i] = new Pixel
-                {
-                    Character = '\u2554',
-                    textRGB = new RGB(255,255,255),
-                    bgRGB = new RGB(0,0,0),
+            for (int col = 0; col < menuWidth; col++)
+            {
+                char c = ' ';
 
-                };
-                for (int j = 0; j < menuWidth; j++)
+                // Corners
+                if (row == 0 && col == 0) c = '\u2554';
+                else if (row == 0 && col == menuWidth - 1) c = '\u2557';
+                else if (row == menuHeight - 1 && col == 0) c = '\u255A';
+                else if (row == menuHeight - 1 && col == menuWidth - 1) c = '\u255D';
+
+                // Borders
+                else if (row == 0 || row == menuHeight - 1) c = '\u2550'; 
+                else if (col == 0 || col == menuWidth - 1) c = '\u2551'; 
+
+                // Content (every other for rendering)
+                else if (row % 2 == 0 && row >= 2 && row < menuHeight - 1)
                 {
-                    renderBuffer[x + j, y + i] = new Pixel
+                    int itemIndex = (row - 2) / 2;
+
+                    if (itemIndex < _menuElements.Count)
                     {
-                        Character = '\u2550',
-                        textRGB = new RGB(255, 255, 255),
-                        bgRGB = new RGB(0, 0, 0),
+                        char[] item = _menuElements[itemIndex];
 
-                    };
-                }
-                renderBuffer[x, y + i] = new Pixel
-                {
-                    Character = '\u2557',
-                    textRGB = new RGB(255, 255, 255),
-                    bgRGB = new RGB(0, 0, 0),
-
-                };
-
-            }
-            
-            else {
-                if (i == _menuElements.Count)
-                {
-                    renderBuffer[x, y + i] = new Pixel
-                    {
-                        Character = '\u255A',
-                        textRGB = new RGB(255, 255, 255),
-                        bgRGB = new RGB(0, 0, 0),
-
-                    };
-                    for (int j = 0; j < menuWidth; j++)
-                    {
-                        renderBuffer[x, y + i + j] = new Pixel
+                        // Cursor
+                        if (col == 1)
                         {
-                            Character = '\u2550',
-                            textRGB = new RGB(255, 255, 255),
-                            bgRGB = new RGB(0, 0, 0),
-
-                        };
-                    }
-                    renderBuffer[x, y + i] = new Pixel
-                    {
-                        Character = '\u255D',
-                        textRGB = new RGB(255, 255, 255),
-                        bgRGB = new RGB(0, 0, 0),
-
-                    };
-                }
-                else 
-                {
-                    renderBuffer[x, y + i] = new Pixel
-                    {
-                        Character = '\u2551',
-                        textRGB = new RGB(255, 255, 255),
-                        bgRGB = new RGB(0, 0, 0),
-
-                    };
-                    int spaceCount = menuWidth - _menuElements[i].Length;
-                    if (i == selectedIndex)
-                    {
-                        renderBuffer[x, y + i] = new Pixel
+                            c = (itemIndex == selectedIndex) ? '>' : ' ';
+                        }
+                        // Text
+                        else if (col >= 3 && col - 3 < item.Length)
                         {
-                            Character = '>',
-                            textRGB = new RGB(255, 255, 255),
-                            bgRGB = new RGB(0, 0, 0),
-
-                        };
+                            c = item[col - 3];
+                        }
                     }
-                    for (int j = 0; j < spaceCount-2; j++)
+                }
+                if (startX + col >= 0 && startX + col < renderBuffer.Width &&
+                    startY + row >= 0 && startY + row < renderBuffer.Height)
+                {
+                    renderBuffer[startX + col, startY + row] = new Pixel
                     {
-                    }
-                    renderBuffer[x, y + i] = new Pixel
-                    {
-                        Character = '\u2551',
+                        Character = c,
                         textRGB = new RGB(255, 255, 255),
-                        bgRGB = new RGB(0, 0, 0),
-
+                        bgRGB = new RGB(0, 0, 0)
                     };
                 }
             }

@@ -12,10 +12,18 @@ internal class Camera
     Player _player;
     RenderBuffer _buffer = new RenderBuffer();
     private readonly StringBuilder _builder = new StringBuilder();
+    private readonly Menu _menu;
     public Camera(Player player) 
     {
         _player = player;
         AddObject(player);
+        string[] menuOptions = {
+            "Resume",
+            "Options",
+            "Exit"
+        };
+        _menu = new Menu(menuOptions);
+        AddObject(_menu);
     }
     public Camera(Player player, List<IDrawable> objects)
     {
@@ -67,7 +75,7 @@ internal class Camera
                 RGB bg = bottom.textRGB;
                 char displayChar = top.Character == '\0' ? ' ' : top.Character;
 
-                // Check if pixel contains entity/text  (not half-block)
+                // Check if pixel contains text (not half-block)
                 bool topHasText = top.Character != '\u2580' && top.Character != '\0';
                 bool bottomHasText = bottom.Character != '\u2580' && bottom.Character != '\0';
 

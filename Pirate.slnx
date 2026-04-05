@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Pirate.Core.Tests/Pirate.Core.Tests.csproj" />
   <Project Path="Pirate.Core/Pirate.Core.csproj" />
+  <Project Path="RelationshipSystem.Core/RelationshipSystem.Core.csproj" Id="457c7c0e-ffa1-4390-9672-257cf0cc49c4" />
 </Solution>
