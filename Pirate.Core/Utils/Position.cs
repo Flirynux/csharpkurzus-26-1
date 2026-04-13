@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Xml.Linq;
 
-namespace Pirate.Core.entities;
+namespace Pirate.Core.Utils;
 
 public struct Position
 {

@@ -7,7 +7,7 @@ using System.Reflection.Metadata;
 
 using Pirate.Core.Utils;
 
-internal class Navmap
+public class Navmap
 {
     private readonly BitArray _map;
 

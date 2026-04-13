@@ -1,4 +1,4 @@
-﻿using Pirate.Core.entities;
+﻿using Pirate.Core.Utils;
 
 namespace Pirate.Core.UI.Graphics;
 

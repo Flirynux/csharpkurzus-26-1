@@ -7,6 +7,7 @@ using System.Text;
 using Pirate.Core.entities;
 using Pirate.Core.entities.ships.types;
 using Pirate.Core.UI.Graphics;
+using Pirate.Core.Utils;
 
 namespace Pirate.Core;
 
@@ -28,11 +29,10 @@ internal class Engine
 
         string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "map_binary.txt");
         Map map = new Map(filePath);
-        Navmap navmap = new Navmap(filePath);
-        _player = new Player(navmap, s_random, "Playa");
+        s_navmap = new Navmap(filePath);
+        _player = new Player(s_navmap, s_random, "Playa");
         _camera = new Camera(_player);
         _camera.AddObject(map);
-        s_navmap = navmap;
         _factions = new List<Faction>(4);
     }
 
