@@ -12,14 +12,15 @@ internal class Camera
     Player _player;
     RenderBuffer _buffer = new RenderBuffer();
     private readonly StringBuilder _builder = new StringBuilder();
-    private readonly Menu _menu;
+    public readonly Menu _menu;
     public Camera(Player player) 
     {
         _player = player;
         AddObject(player);
         string[] menuOptions = {
             "Resume",
-            "Options",
+            "Save",
+            "Load",
             "Exit"
         };
         _menu = new Menu(menuOptions);

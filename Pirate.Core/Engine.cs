@@ -18,6 +18,7 @@ internal class Engine
     private readonly List<Faction> _factions;
     private readonly static Random s_random = new Random(42);
     private static Navmap s_navmap;
+    bool haltExecution = false;
 
     EngineState _state = EngineState.STOPPED; 
 
@@ -131,20 +132,47 @@ internal class Engine
 
     public void Update(float deltaTime)
     {
-
+        EngineTask task = EngineTask.PASS;
+        
         if (Console.KeyAvailable)
         {
             var key = Console.ReadKey(true).Key;
+            task = _camera._menu.HandleInput(key);
+            haltExecution = HandleTask(task);
+            _player.is_menu_active = haltExecution;
             _player.HandleInput(key, deltaTime);
         }
-        _player.Update(deltaTime);
-        foreach (var item in _factions)
+        if (!haltExecution)
         {
-            foreach (var ship in item.Ships)
+            _player.Update(deltaTime);
+            foreach (var item in _factions)
             {
-                ship.Update(deltaTime);
+                foreach (var ship in item.Ships)
+                {
+                    ship.Update(deltaTime);
+                }
             }
         }
+    }
+
+    private bool HandleTask(EngineTask task)
+    {
+        switch(task)
+        {
+            case EngineTask.HALT:
+                return true;
+            case EngineTask.SAVE:
+                Save();
+                break;
+            case EngineTask.LOAD:
+                Load(); 
+                break;
+            case EngineTask.EXIT:
+                Exit();
+                return true;
+            default: return false;
+        }
+        return false;
     }
 
     public void Render()
@@ -164,7 +192,7 @@ internal class Engine
 
     public void Exit()
     {
-
+        _state = EngineState.EXIT;
     }
 }
 
@@ -173,4 +201,13 @@ public enum EngineState
     STOPPED,
     RUNNING,
     EXIT
+}
+
+public enum EngineTask
+{
+    HALT,
+    SAVE,
+    LOAD,
+    EXIT,
+    PASS
 }

@@ -14,6 +14,8 @@ internal class Player : IDrawable
     private Ship _flagship;
     private readonly Faction _faction;
     private Compass _compass = new Compass();
+    public bool is_menu_active = false;
+
 
     public DrawPriority Priority => DrawPriority.PLAYER;
 
@@ -82,6 +84,8 @@ internal class Player : IDrawable
     }
     public void HandleInput(ConsoleKey key, float deltaTime)
     {
+        if (is_menu_active) return;
+
         switch (key) 
         {
             case ConsoleKey.W:
