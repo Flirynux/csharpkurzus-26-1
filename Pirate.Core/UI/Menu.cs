@@ -35,11 +35,15 @@ internal class Menu : IDrawable
         {
             case ConsoleKey.W:
                 selectedIndex--;
-                MoveSelected();
+                break;
+            case ConsoleKey.UpArrow:
+                selectedIndex--;
                 break;
             case ConsoleKey.S:
                 selectedIndex++;
-                MoveSelected();
+                break;
+            case ConsoleKey.DownArrow:
+                selectedIndex++;
                 break;
             case ConsoleKey.Enter:
                 active = !active;
@@ -48,6 +52,8 @@ internal class Menu : IDrawable
                 break;
 
         }
+
+        MoveSelected();
         return EngineTask.HALT;
     }
 

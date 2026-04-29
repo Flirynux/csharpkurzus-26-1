@@ -63,6 +63,6 @@ internal class Program
             while (timer.Elapsed.TotalSeconds - currentTick < targetFrameTime)
             { }
         }
-        return;
+        Environment.Exit(0);
     }
 }

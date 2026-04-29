@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Text;
+using System.Text.Json;
 
 using Pirate.Core.entities;
 using Pirate.Core.entities.ships.types;
@@ -182,12 +183,33 @@ internal class Engine
 
     public void Save()
     {
+        // Accessing private fields might require adding a GetSaveData() method to Player.cs
+        var saveData = new PlayerSaveData
+        {
+            Speed = _player._flagship.Speed,
+            Angle = _player._compass.Direction,
+            X = _player.Position.x,
+            Y = _player.Position.y,
+            // Wealth = _player.GetWealth(), // Example helper
+            // Speed = _player.Ship.Speed
+        };
 
+        string json = JsonSerializer.Serialize(saveData, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText("player_save.json", json);
     }
 
     public void Load()
     {
+        string filePath = "player_save.json";
+        if (!File.Exists(filePath)) return;
 
+        string json = File.ReadAllText(filePath);
+        PlayerSaveData data = JsonSerializer.Deserialize<PlayerSaveData>(json);
+
+        if (data != null)
+        {
+            _player.LoadState(data);
+        }
     }
 
     public void Exit()
