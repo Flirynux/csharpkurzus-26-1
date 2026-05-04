@@ -11,9 +11,11 @@ namespace Pirate.Core.entities;
 internal class Player : IDrawable
 {
     private readonly string _name;
-    private Ship _flagship;
-    public readonly Faction _faction;
-    private Compass _compass = new Compass();
+    public Ship _flagship;
+    private readonly Faction _faction;
+    public Compass _compass = new Compass();
+    public bool is_menu_active = false;
+
 
     public DrawPriority Priority => DrawPriority.PLAYER;
 
@@ -82,6 +84,8 @@ internal class Player : IDrawable
     }
     public void HandleInput(ConsoleKey key, float deltaTime)
     {
+        if (is_menu_active) return;
+
         switch (key) 
         {
             case ConsoleKey.W:
@@ -112,4 +116,24 @@ internal class Player : IDrawable
         float fixedY = Math.Clamp(_flagship._position.Y, Constants.PLAYER_MOVEMENT_BORDER_TOP, Constants.PLAYER_MOVEMENT_BORDER_BOTTOM);
         _flagship._position =new Vector2(fixedX, fixedY);
     }
+
+    public void LoadState(PlayerSaveData data)
+    {
+        // Overwrite the hardcoded defaults with saved values
+        _flagship.Speed = data.Speed;
+        _flagship._position = new Vector2(data.X, data.Y);
+        _compass.Direction = data.Angle; // You may need to add SetAngle to Compass
+    }
+}
+
+public class PlayerSaveData
+{
+    // Mutable Stats (Change during play)
+    public float Wealth { get; set; }
+    public float Speed { get; set; }
+
+    // Position/Orientation
+    public float X { get; set; }
+    public float Y { get; set; }
+    public float Angle { get; set; } // The compass direction
 }

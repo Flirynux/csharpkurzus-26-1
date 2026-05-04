@@ -22,6 +22,12 @@ public class Compass : IDrawable
         }
     }
 
+    public float Direction
+    {
+        get { return _direction; }
+        set { _direction = value; }
+    }
+
     public Compass(float directionInRadians = (float)(Math.PI/-2))
     {
         _direction = directionInRadians;
