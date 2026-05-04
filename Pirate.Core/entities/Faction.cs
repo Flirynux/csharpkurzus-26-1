@@ -54,21 +54,36 @@ internal class Faction
 
     public void Alliance(Faction ally)
     {
+        AddEnemy(ally);
+        ally.AddAlly(ally);
+    }
+
+    protected void AddAlly(Faction ally)
+    {
         _allies.Add(ally);
-        ally.Alliance(this);
     }
 
     public void War(Faction enemy)
     {
+        AddEnemy(enemy);
+        enemy.AddEnemy(this);
+    }
+
+    protected void AddEnemy(Faction enemy)
+    {
         _enemies.Add(enemy);
-        enemy.War(this);
     }
 
     public void SetNeutralRelation(Faction other)
     {
+        NeutralRelations(other);
+        other.NeutralRelations(this);
+    }
+
+    protected void NeutralRelations(Faction other)
+    {
         _allies.Remove(other);
         _enemies.Remove(other);
-        other.SetNeutralRelation(this);
     }
 
     public override string ToString()

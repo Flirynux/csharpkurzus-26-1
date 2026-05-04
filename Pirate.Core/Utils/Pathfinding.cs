@@ -21,15 +21,22 @@ public class Node
         IsWalkable = walkable;
     }
 
+    public Node(Vector2 vector, bool walkable)
+    {
+        X = (int)vector.X;
+        Y = (int)vector.Y;
+        IsWalkable = walkable;
+    }
+
     public static implicit operator Vector2(Node node)
     {
         return new Vector2(node.X, node.Y);
     }
 }
 
-public interface IPathfinder
+public static class Pathfinder
 {
-    public List<Vector2> FindPath(Node start, Node goal, Navmap navmap)
+    public static List<Vector2> FindPath(Node start, Node goal, Navmap navmap)
     {
         var openSet = new PriorityQueue<Node, double>();
         var closedSet = new HashSet<Node>();
@@ -58,7 +65,7 @@ public interface IPathfinder
         return null; // No path found
     }
 
-    bool HasLineOfSight(Node a, Node b, Navmap navmap)
+    private static bool HasLineOfSight(Node a, Node b, Navmap navmap)
     {
         int x0 = a.X; int y0 = a.Y;
         int x1 = b.X; int y1 = b.Y;
@@ -80,7 +87,7 @@ public interface IPathfinder
         }
     }
 
-    void UpdateVertex(Node s, Node neighbor, PriorityQueue<Node, double> openSet, Navmap navmap)
+    private static void UpdateVertex(Node s, Node neighbor, PriorityQueue<Node, double> openSet, Navmap navmap)
     {
         double oldG = neighbor.G;
 
@@ -114,12 +121,12 @@ public interface IPathfinder
         }
     }
 
-    double GetDistance(Node a, Node b)
+    private static double GetDistance(Node a, Node b)
     {
         return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
     }
 
-    private List<Vector2> ReconstructPath(Node goalNode)
+    private static List<Vector2> ReconstructPath(Node goalNode)
     {
         List<Vector2> path = new List<Vector2>();
         Node currentNode = goalNode;
@@ -141,7 +148,7 @@ public interface IPathfinder
         return path;
     }
 
-    private List<Node> GetNeighbors(Node node, Navmap navmap)
+    private static List<Node> GetNeighbors(Node node, Navmap navmap)
     {
         List<Node> res = new List<Node>();
 

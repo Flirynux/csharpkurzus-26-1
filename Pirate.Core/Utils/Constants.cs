@@ -13,4 +13,10 @@ static class Constants
     public static int PLAYER_MOVEMENT_BORDER_RIGHT = MAP_WIDTH-(DRAW_WIDTH/2 + 1);
     public static int PLAYER_MOVEMENT_BORDER_TOP = DRAW_HEIGHT/2 + 1;
     public static int PLAYER_MOVEMENT_BORDER_BOTTOM = MAP_HEIGHT-(DRAW_HEIGHT/2 + 1);
+
+    public static bool InDrawingWindow(int topLeftX, int topLeftY, int posX, int posY)
+    {
+        return topLeftX < posX && posX < topLeftX + Constants.DRAW_WIDTH - 1 &&
+               topLeftY < posY && posY < topLeftY + Constants.DRAW_HEIGHT * Constants.VERTICAL_SCALE;
+    }
 }

@@ -12,7 +12,7 @@ internal class Player : IDrawable
 {
     private readonly string _name;
     private Ship _flagship;
-    private readonly Faction _faction;
+    public readonly Faction _faction;
     private Compass _compass = new Compass();
 
     public DrawPriority Priority => DrawPriority.PLAYER;

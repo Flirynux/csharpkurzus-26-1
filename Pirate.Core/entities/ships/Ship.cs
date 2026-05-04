@@ -7,7 +7,7 @@ using Pirate.Core.Utils;
 
 namespace Pirate.Core.entities.ships;
 
-internal abstract class Ship : IDrawable, IPathfinder
+internal abstract class Ship : IDrawable
 {
     public string _name;
     private float _speed = 0;
@@ -21,7 +21,7 @@ internal abstract class Ship : IDrawable, IPathfinder
     private Vector2 _lastFramePos;
     private Vector2 _destination;
 
-    private List<Vector2> _pathPoints;
+    private List<Vector2> _pathPoints = new List<Vector2>();
     private int _hasntMoved;
 
     public Modifier[] _modifiers;
@@ -69,6 +69,15 @@ internal abstract class Ship : IDrawable, IPathfinder
         direction = Vector2.Normalize(direction);
         Vector2 maxTravel = _position + direction * deltaTime * _speed;
         _position = (maxTravel-position).Length() < 2 ? position : maxTravel;
+        if((maxTravel - position).Length() < 2)
+        {
+            _position = position;
+            _pathPoints.Remove(position);
+        }
+        else
+        {
+            _position = maxTravel;
+        }
     }
 
     private void ClampInbounds()
@@ -80,7 +89,7 @@ internal abstract class Ship : IDrawable, IPathfinder
 
     public void Update(float deltaTime)
     {
-        goToDestination(deltaTime);
+        GoToDestination(deltaTime);
     }
 
     private bool checkIfStuck()
@@ -96,7 +105,7 @@ internal abstract class Ship : IDrawable, IPathfinder
 
         return _hasntMoved == 0;
     }
-    private void goToDestination(float deltaTime)
+    public void GoToDestination(float deltaTime)
     {
         if (checkIfStuck())
         {
@@ -106,9 +115,15 @@ internal abstract class Ship : IDrawable, IPathfinder
         if (arrivedAtDestination())
         {
             findNewDestination();
+            Node start = new Node(_position, true);
+            Node goal = new Node(_destination, true);
+            _pathPoints = Pathfinder.FindPath(start,goal,_navmap);
         }
-       
 
+        if (_pathPoints.Count > 0)
+        {
+            MoveToPosition(_pathPoints[0],deltaTime);
+        }
         
     }
     // Selects a random settlements from own or any allied faction
