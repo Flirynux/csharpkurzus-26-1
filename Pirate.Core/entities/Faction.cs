@@ -3,7 +3,7 @@ using Pirate.Core.UI.Graphics;
 
 namespace Pirate.Core.entities;
 
-internal class Faction
+public class Faction
 {
     public readonly FactionType _type;
     private int _wealth;
@@ -54,8 +54,8 @@ internal class Faction
 
     public void Alliance(Faction ally)
     {
-        AddEnemy(ally);
-        ally.AddAlly(ally);
+        AddAlly(ally);
+        ally.AddAlly(this);
     }
 
     protected void AddAlly(Faction ally)
@@ -104,15 +104,15 @@ internal class Faction
         switch (_type)
         {
             case FactionType.ENGLISH:
-                return new RGB { R = 255, G = 0, B = 0 };
+                return new RGB(255,0,0);
             case FactionType.DUTCH:
-                return new RGB { R = 0, G = 127, B = 127 };
+                return new RGB(0,127,127);
             case FactionType.FRENCH:
-                return new RGB { R = 0, G = 0, B = 255 };
+                return new RGB(0,0,255);
             case FactionType.SPANISH:
-                return new RGB { R = 0, G = 255, B = 255 };
+                return new RGB(0, 255, 255);
             default:
-                return new RGB { R = 127, G = 127, B = 127 };
+                return new RGB(127, 127, 127);
         }
     }
 }

@@ -27,15 +27,27 @@ public struct Pixel
     public char Character;
     public RGB textRGB;
     public RGB bgRGB;
+
+    public Pixel(char character, RGB text, RGB bg)
+    {
+        Character = character;
+        textRGB = text;
+        bgRGB = bg;
+    }
+
+    public Pixel(char character, RGB text) : 
+        this(character,text,new RGB(0,0,0)) { }
+    public Pixel(char character) : 
+        this(character, new RGB(0,0,0), new RGB(0,0,0)) { }
 }
 
-public struct RGB
+public readonly struct RGB
 {
-    public byte R;
-    public byte G;
-    public byte B;
+    public byte R { get; }
+    public byte G { get; }
+    public byte B { get; }
 
-    public RGB(byte r,byte g,byte b)
+    public RGB(byte r, byte g, byte b)
     {
         R = r; G = g; B = b;
     }

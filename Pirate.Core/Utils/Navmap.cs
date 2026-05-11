@@ -13,23 +13,38 @@ public class Navmap
 
     public Navmap(string path)
     {
-        string[] lines = File.ReadAllLines(path);
-
-        if (lines.Length == 0) throw new FileLoadException("Map file is empty.");
-
-        _map = new BitArray(Constants.MAP_WIDTH * Constants.MAP_HEIGHT);
-
-        for (int r = 0; r < Constants.MAP_HEIGHT; r++)
+        try
         {
-            string line = lines[r].Trim();
 
-            for (int c = 0; c < Constants.MAP_WIDTH; c++)
+            string[] lines = File.ReadAllLines(path);
+
+            if (lines.Length == 0) throw new InvalidDataException("Map file is empty.");
+
+            _map = new BitArray(Constants.MAP_WIDTH * Constants.MAP_HEIGHT);
+
+            for (int r = 0; r < Constants.MAP_HEIGHT; r++)
             {
-                if (line[c] == '0')
+                string line = lines[r].Trim();
+
+                for (int c = 0; c < Constants.MAP_WIDTH; c++)
                 {
-                    _map.Set(r * Constants.MAP_WIDTH + c, true);
+                    if (line[c] == '0')
+                    {
+                        _map.Set(r * Constants.MAP_WIDTH + c, true);
+                    }
                 }
             }
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            // permission
+            Console.WriteLine($"Permission error: {ex.Message}");
+            throw;
+        }
+        catch (FileNotFoundException ex)
+        {
+            // file exists
+            Console.WriteLine($"Navigation map file not found: {ex.Message}");
         }
     }
 

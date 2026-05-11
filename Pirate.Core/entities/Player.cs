@@ -66,7 +66,7 @@ internal class Player : IDrawable
             new Pixel
             {
                 Character = '@',
-                textRGB = new RGB { R = 255, G = 0, B = 255 },
+                textRGB = new RGB(255,0,255),
             };
         _compass.Draw(renderBuffer, 0, 0);
     }

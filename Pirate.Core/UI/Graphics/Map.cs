@@ -14,13 +14,27 @@ internal class Map : IDrawable
 
     public Map(string path)
     {
-        string[] lines = File.ReadAllLines(path);
+        try 
+        { 
+            string[] lines = File.ReadAllLines(path);
 
-        if (lines.Length == 0) throw new IOException("Map file is empty.");
-        for (int i = 0; i < lines.Length; i++)
+            if (lines.Length == 0) throw new IOException("Map file is empty.");
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i].Trim();
+                _map[i] = line.ToCharArray();
+            }
+        }
+        catch (UnauthorizedAccessException ex)
         {
-            string line = lines[i].Trim();
-            _map[i] = line.ToCharArray();
+            // permission
+            Console.WriteLine($"Permission error: {ex.Message}");
+            throw;
+        }
+        catch (FileNotFoundException ex)
+        {
+            // file exists
+            Console.WriteLine($"Map file not found: {ex.Message}");
         }
     }
 
@@ -63,11 +77,11 @@ internal class Map : IDrawable
         switch (character)
         {
             case '0': // Water
-                return new RGB { R = 0, G = 0, B = 127 };
+                return new RGB(0,0,127);
             case '1': // Land
-                return new RGB { R = 0, G = 255, B = 0 };
+                return new RGB(0,255,0);
             default:
-                return new RGB { R = 0, G = 0, B = 0 };
+                return new RGB(0, 0, 0);
         }
     }
 }

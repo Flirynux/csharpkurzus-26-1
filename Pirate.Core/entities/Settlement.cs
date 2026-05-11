@@ -8,7 +8,7 @@ using Pirate.Core.Utils;
 
 namespace Pirate.Core.entities;
 
-internal class Settlement : IDrawable
+public class Settlement : IDrawable
 {
     private Faction _faction;
     private string _name;

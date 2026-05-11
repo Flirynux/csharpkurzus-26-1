@@ -1,13 +1,13 @@
 ﻿
 
 using System.Numerics;
-
+using System.Linq;
 using Pirate.Core.UI.Graphics;
 using Pirate.Core.Utils;
 
 namespace Pirate.Core.entities.ships;
 
-internal abstract class Ship : IDrawable
+public abstract class Ship : IDrawable
 {
     public string _name;
     private float _speed = 0;
@@ -24,7 +24,6 @@ internal abstract class Ship : IDrawable
     private List<Vector2> _pathPoints = new List<Vector2>();
     private int _hasntMoved;
 
-    public Modifier[] _modifiers;
     public Faction _faction;
     private readonly Navmap _navmap;
     private readonly Random _rnd;
@@ -37,7 +36,7 @@ internal abstract class Ship : IDrawable
 
     public DrawPriority Priority => DrawPriority.SHIPS;
 
-    public Ship(Faction faction,Navmap navmap, string name, Vector2 position, Random random)
+    public Ship(Faction faction, Navmap navmap, Random random, Vector2 position, string name = "Ship")
     {
         _faction = faction;
         _navmap = navmap;
@@ -46,13 +45,16 @@ internal abstract class Ship : IDrawable
         _speed = _maxSpeed;
         _crew = 8;
         _cannons = 4;
-        _modifiers = new Modifier[8];
         faction.AddShip(this);
         _position = position;
         _lastFramePos = position;
         _rnd = random;
         _hasntMoved = _rnd.Next(30) + 30;
     }
+
+    public Ship(Faction faction, Navmap navmap, Random random)
+        : this(faction, navmap, random, new Vector2(40.0f, 40.0f))
+    { }
     public bool Move(Vector2 deltaPosition,float deltaTime)
     {
         if (_navmap.IsSailable(_position+ deltaPosition))
@@ -130,12 +132,10 @@ internal abstract class Ship : IDrawable
     // Sets selevted settlement as destination
     private void findNewDestination()
     {
-        List<Settlement> alliedSettlements = _faction.Settlements;
-        List<Faction> alliedFactions = _faction.Allies;
-        foreach(Faction item in alliedFactions)
-        {
-            alliedSettlements.AddRange(item.Settlements);
-        }
+        var alliedSettlements = _faction.Allies
+            .SelectMany(f => f.Settlements)
+            .Concat(_faction.Settlements)
+            .ToList();
         int r = _rnd.Next(alliedSettlements.Count);
         Settlement selected = alliedSettlements[r];
         _destination = selected.Position;
@@ -146,10 +146,6 @@ internal abstract class Ship : IDrawable
 
         return (_destination - _position).Length() < 5;
     }
-
-    // TODO figure out a way to make it work or abandon concept
-    public abstract void ApplyModifiers();
-    public abstract void AddModifier(Modifier modifier);
 
     public override string ToString()
     {
@@ -173,11 +169,7 @@ internal abstract class Ship : IDrawable
            topY < posY && posY < topY + Constants.DRAW_HEIGHT)
         {
             RGB foregroundColor = _faction.GetFactionColor();
-            renderBuffer[posX - topX, (posY - topY) / 2] = new Pixel
-            {
-                Character = 'A',
-                textRGB = foregroundColor,
-            };
+            renderBuffer[posX - topX, (posY - topY) / 2] = new Pixel('A',foregroundColor);
         }
     }
 }
